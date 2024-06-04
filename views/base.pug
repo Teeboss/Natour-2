@@ -3,14 +3,14 @@ html
   head
     block head
       meta(charset='UTF-8')
-      meta(name='viewport', content='width=device-width, initial-scale=1.0')
+      meta(name='viewport' content='width=device-width, initial-scale=1.0')
       //- /* Map box solution line 8, 12 and 13
-      meta(http-equiv="Content-Security-Policy" content="script-src 'self' api.mapbox.com;worker-src blob: ;connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js http://127.0.0.1:5000/api/v1/users/login")
-      link(rel='stylesheet', href='/css/style.css')
-      link(rel='shortcut icon', type='image/png', href='/img/favicon.png')
-      link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
-      script(src='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js')
-      link(href='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css' rel='stylesheet')
+      //- meta(http-equiv="Content-Security-Policy" content="script-src 'self' api.mapbox.com;worker-src blob: ;connect-src https://api.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js http://127.0.0.1:5000/api/v1/users/login")
+      link(rel='stylesheet' href='/css/style.css')
+      link(rel='shortcut icon' type='image/png' href='/img/favicon.png')
+      link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
+      //- script(src='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js')
+      //- link(href='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css' rel='stylesheet')
       title Natours | #{title}
 
   body
@@ -20,11 +20,12 @@ html
     // CONTENT
     block content 
       h1 This is a placeholder heading
- 
+
 
     // FOOTER
     include _footer
 
-    script(src='/js/axios.min.js')
-    script(src='/js/mapbox.js')
-    script(src='/js/login.js')
+    //- script(src='/js/axios.min.js')
+    //- script(src='/js/mapbox.js')
+    //- script(src='/js/login.js')
+    script(src='/js/bundle.js')

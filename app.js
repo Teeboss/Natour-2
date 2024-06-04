@@ -34,11 +34,40 @@ app.use(
     contentSecurityPolicy: false,
   })
 );
-
+// app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self' https://*.mapbox.com; connect-src 'self' ws://127.0.0.1:2974;"
+  );
+  next();
+});
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    'connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js http://127.0.0.1:5000/api/v1/users/login ws://127.0.0.1:2974;'
+  );
+  next();
+});
+
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "connect-src 'self' ws://127.0.0.1:2974 https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js http://127.0.0.1:5000/api/v1/users/login;"
+  );
+  next();
+});
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "connect-src 'self' https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js http://127.0.0.1:5000/api/v1/users/login http://127.0.0.1:5000/api/v1/users/logout ws://127.0.0.1:2974;"
+  );
+  next();
+});
 
 // Limit requests from same API
 const limiter = rateLimit({
@@ -50,6 +79,7 @@ app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 // Data Sanitization against NOSQL query injection

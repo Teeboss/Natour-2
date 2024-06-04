@@ -80,6 +80,14 @@ exports.login = catchAsync(async (req, res, next) => {
   // next();
 });
 
+exports.logout = (req, res) => {
+  res.cookie(jwt, 'loggedOut', {
+    expires: new Date(date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
+
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting the token and check if it's there
   let token;
@@ -124,37 +132,42 @@ exports.protect = catchAsync(async (req, res, next) => {
   // GRANT ACCESS TO THE PROTECTED ROUTE / IT LEADS USE TO
 
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 
-// Only for rendered pages and there'd be no errors
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+// Only for rendered pages, and there'd be no errors
+exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
-    // 2) Verify the token
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET
-    );
+    try {
+      // 2) Verify the token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
 
-    // console.log(decoded);
+      // console.log(decoded);
 
-    // 3) check if the user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
+      // 3) check if the user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+
+      // 4) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      //THERE IS A LOGGED IN USER
+      res.locals.user = currentUser;
+      return next();
+    } catch (e) {
       return next();
     }
-
-    // 4) Check if user changed password after the token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-      return next();
-    }
-
-    //THERE IS A LOGGED IN USER
-    res.locals.user = currentUser;
-    return next();
   }
   next();
-});
+};
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
@@ -248,7 +261,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) get the user from the collection
   const user = await User.findById(req.user.id).select('+password');
   // 2) check if the POSTed current password is correct
-  if (!(await user.correctPassword(req.body.passwordConfirm, user.password))) {
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(new AppError('Your current password is wrong.', 401));
   }
   // 3) If so, update password

@@ -2,16 +2,21 @@
   "name": "natours",
   "version": "1.0.0",
   "description": "Learning Node, Express and mongoDB",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production && nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
+    "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "author": "Pelumi Habib",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
@@ -23,6 +28,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^5.13.20",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "ndb": "^1.1.5",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.1.0",

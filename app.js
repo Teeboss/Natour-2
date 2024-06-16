@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/usersRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
@@ -50,6 +51,14 @@ app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
     'connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js http://127.0.0.1:5000/api/v1/users/login ws://127.0.0.1:2974;'
+  );
+  next();
+});
+
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    'connect-src https://js.stripe.com/v3/'
   );
   next();
 });
@@ -115,6 +124,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -6757,7 +6757,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // type is either 'password' or 'data'
 const updateSettings = async (data, type) => {
   try {
-    const url = type === 'password' ? 'http://127.0.0.1:5000/api/v1/users/updateMyPassword' : 'http://127.0.0.1:5000/api/v1/users/updateMe';
+    const url = type === 'password' ? '/api/v1/users/updateMyPassword' : '/api/v1/users/updateMe';
     const res = await (0, _axios.default)({
       method: 'PATCH',
       url,
@@ -6792,8 +6792,8 @@ const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 const bookTour = async tourId => {
   // 1) Get checkout session from API
   try {
-    const session = await (0, _axios.default)(`http://127.0.0.1:5000/api/v1/bookings/checkout-session/${tourId}`);
-    console.log(session);
+    const session = await (0, _axios.default)(`/api/v1/bookings/checkout-session/${tourId}`);
+    // console.log(session);
     // 2) Create checkout form + chanre credit card
     await stripe.redirectToCheckout({
       sessionId: session.data.session.id
@@ -6848,7 +6848,6 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
     (0, _updateSettings.updateSettings)(form, 'data');
   });
 }
@@ -6906,7 +6905,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "7489" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "9463" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
